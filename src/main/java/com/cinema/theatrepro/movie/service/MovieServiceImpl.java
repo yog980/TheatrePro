@@ -136,8 +136,9 @@ public class MovieServiceImpl implements MovieService{
             movieShow.setShift(showDto.getShift());
             movieShow.setStartDate(DateUtils.parseDate(showDto.getStartDate()));
             movieShow.setDiscountPercentage(showDto.getDiscountPercentage());
-            Optional<Movie> movie = movieRepository.findById(showDto.getMovieId());
-            movieShow.setMovie(movie.get());
+            Movie movie = movieRepository.findById(showDto.getMovieId()).orElseThrow(() ->
+                    new ClientException("Movie not found with id "+showDto.getMovieId()));
+            movieShow.setMovie(movie);
             Optional<Theatre> theatre = theatreRepository.findById(showDto.getTheatreId());
             movieShow.setTheatre(theatre.get());
             movieShow.setStatus(Status.ACTIVE);
