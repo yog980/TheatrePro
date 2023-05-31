@@ -29,8 +29,10 @@ public class MovieController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "status", required = false) Status status,
             @RequestParam(value = "releaseDate", required = false) String releaseDate,
-            @RequestParam(value = "duration", required = false) String duration) {
-        return movieService.saveMovie(file,title,description,status,releaseDate,duration);
+            @RequestParam(value = "duration", required = false) String duration,
+            @RequestParam(value = "isTrending",required = false) boolean isTrending,
+            @RequestParam(value = "bannerImage",required = false) MultipartFile bannerImage) {
+        return movieService.saveMovie(file,title,description,status,releaseDate,duration,isTrending,bannerImage);
     }
 
     @PostMapping("/{movieId}/update")
@@ -41,8 +43,10 @@ public class MovieController {
             @RequestParam(value = "status", required = false) Status status,
             @RequestParam(value = "releaseDate", required = false) String releaseDate,
             @RequestParam(value = "duration", required = false) String duration,
-            @PathVariable(value = "movieId") Long movieId) throws IOException {
-        return movieService.updateMovie(file,title,description,status,releaseDate,duration,movieId);
+            @PathVariable(value = "movieId") Long movieId,
+            @RequestParam(value = "isTrending",required = false) boolean isTrending,
+            @RequestParam(value = "bannerImage",required = false) MultipartFile bannerImage) throws IOException {
+        return movieService.updateMovie(file,title,description,status,releaseDate,duration,movieId,isTrending,bannerImage);
     }
 
     @GetMapping("/all")
@@ -73,5 +77,10 @@ public class MovieController {
     @GetMapping("/{movieId}/movie-show")
     public List<MovieShowResponse> getMovieShowById(@PathVariable("movieId") Long movieId) {
         return movieService.getMovieShowsByMovieId(movieId);
+    }
+
+    @GetMapping("/movies/trending")
+    public List<MovieResponse> getAllTrendingMovies() {
+        return movieService.getAllTrendingMovies();
     }
 }

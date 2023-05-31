@@ -31,4 +31,9 @@ public class Movie extends AbstractEntity {
 
     private String duration;
 
+    private boolean isTrending;
+
+    @Lob
+    private byte[] bannerImage;
+
 }
