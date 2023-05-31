@@ -18,4 +18,6 @@ public class MovieResponse {
     private String image;
     private String releaseDate;
     private String duration;
+    private boolean isTrending;
+    private String bannerImage;
 }

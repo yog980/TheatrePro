@@ -11,4 +11,6 @@ public class MovieDto {
     private byte[] image;
     private String releaseDate;
     private String duration;
+    private boolean isTrending;
+    private byte[] bannerImage;
 }

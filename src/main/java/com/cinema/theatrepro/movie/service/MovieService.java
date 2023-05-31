@@ -14,10 +14,12 @@ public interface MovieService {
     List<MovieResponse> fetchAllMovies();
 
     SuccessResponse saveMovie(MultipartFile file, String title, String description,
-                              Status status,String releaseDate,String duration);
+                              Status status,String releaseDate,String duration,boolean isTrending,
+                              MultipartFile bannerImage);
 
     SuccessResponse updateMovie(MultipartFile file, String title, String description,
-                              Status status,String releaseDate,String duration,Long movieId) throws IOException;
+                              Status status,String releaseDate,String duration,Long movieId,boolean isTrending,
+                                MultipartFile bannerImage) throws IOException;
 
     List<TheatreResponse> fetchAllThreatres();
 
@@ -28,5 +30,7 @@ public interface MovieService {
     List<MovieSeatResponse> fetchMovieSeatByMovieShow(Long movieShowId);
 
     List<MovieShowResponse> getMovieShowsByMovieId(Long movieId);
+
+    List<MovieResponse> getAllTrendingMovies();
 
 }

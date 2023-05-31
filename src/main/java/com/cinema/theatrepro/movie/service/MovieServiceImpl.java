@@ -52,7 +52,8 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public SuccessResponse saveMovie(MultipartFile file, String title, String description,
-                                     Status status,String releaseDate,String duration) {
+                                     Status status,String releaseDate,String duration,boolean isTrending,
+                                     MultipartFile bannerImage) {
         log.info("Saving data into movie ...");
         Movie movieDto = new Movie();
         movieDto.setTitle(title);
@@ -60,8 +61,10 @@ public class MovieServiceImpl implements MovieService{
         movieDto.setStatus(status);
         movieDto.setReleaseDate(DateUtils.parseDateOnly(releaseDate));
         movieDto.setDuration(duration);
+        movieDto.setTrending(isTrending);
         try {
             movieDto.setImage(file.getBytes());
+            movieDto.setBannerImage(bannerImage.getBytes());
             log.info("Movie Dto is :: {}",movieDto);
             movieRepository.save(movieDto);
             log.info("Movie Saved ..");
@@ -84,12 +87,14 @@ public class MovieServiceImpl implements MovieService{
                                        Status status,
                                        String releaseDate,
                                        String duration,
-                                       Long movieId) {
+                                       Long movieId,
+                                       boolean isTrending,
+                                       MultipartFile bannerImage) {
         log.info("Fetching movie details by movie id :: {}",movieId);
         Movie movie = movieRepository.findById(movieId).orElseThrow(() ->
                 new ClientException("Movie not found with movie is "+movieId));
         try {
-            if (file != null || !file.isEmpty()) {
+            if (file != null) {
                 movie.setImage(file.getBytes());
             }
             if (title != null) {
@@ -106,6 +111,12 @@ public class MovieServiceImpl implements MovieService{
             }
             if (duration != null) {
                 movie.setDuration(duration);
+            }
+            if (isTrending) {
+                movie.setTrending(true);
+            }
+            if (bannerImage != null) {
+                movie.setBannerImage(bannerImage.getBytes());
             }
             movieRepository.save(movie);
             return SuccessResponse.builder()
@@ -190,6 +201,16 @@ public class MovieServiceImpl implements MovieService{
         return movieShowList;
     }
 
+    @Override
+    public List<MovieResponse> getAllTrendingMovies() {
+        log.info("Fetching all trending movies");
+        List<MovieResponse> movieList = movieRepository.getAllByIsTrending(Boolean.TRUE).stream()
+                .map(e -> convertAllMovies(e))
+                .collect(Collectors.toList());
+        return movieList;
+    }
+
+
     private MovieSeatResponse convertToMovieSeatResponse(MovieSeat movieSeat) {
         return MovieSeatResponse.builder()
                 .seatId(movieSeat.getId())
@@ -245,6 +266,8 @@ public class MovieServiceImpl implements MovieService{
                 .status(movie.getStatus())
                 .releaseDate(movie.getReleaseDate() != null?DateUtils.formatReadableDate(movie.getReleaseDate()):null)
                 .duration(movie.getDuration())
+                .isTrending(movie.isTrending())
+                .bannerImage(movie.getBannerImage() != null?Base64.getEncoder().encodeToString(movie.getBannerImage()):null)
                 .build();
     }
 }
