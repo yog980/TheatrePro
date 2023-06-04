@@ -75,12 +75,28 @@ public class MovieController {
     }
 
     @GetMapping("/{movieId}/movie-show")
-    public List<MovieShowResponse> getMovieShowById(@PathVariable("movieId") Long movieId) {
+    public List<MovieShowResponse> getMovieShowByMovieId(@PathVariable("movieId") Long movieId) {
         return movieService.getMovieShowsByMovieId(movieId);
     }
 
     @GetMapping("/movies/trending")
     public List<MovieResponse> getAllTrendingMovies() {
         return movieService.getAllTrendingMovies();
+    }
+
+    @GetMapping("/{movieId}/movie")
+    public MovieResponse getMovieById(@PathVariable("movieId") Long movieId) {
+        return movieService.getMovieById(movieId);
+    }
+
+    @GetMapping("/{showId}/show")
+    public MovieShowResponse getMovieShowById(@PathVariable("showId") Long showId) {
+        return movieService.getMovieShowById(showId);
+    }
+
+    @PostMapping("/{seatId}/book-seat")
+    public SuccessResponse bookMovieSeat(@PathVariable("seatId") Long seatId,
+                                         @RequestParam("isBooked") Boolean isBooked) {
+        return movieService.bookSeat(isBooked,seatId);
     }
 }
