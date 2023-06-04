@@ -33,4 +33,9 @@ public interface MovieService {
 
     List<MovieResponse> getAllTrendingMovies();
 
+    MovieResponse getMovieById(Long id);
+
+    MovieShowResponse getMovieShowById(Long id);
+
+    SuccessResponse bookSeat(Boolean isBooked,Long seatId);
 }

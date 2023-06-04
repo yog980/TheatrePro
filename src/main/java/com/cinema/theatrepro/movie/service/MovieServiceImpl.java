@@ -64,7 +64,9 @@ public class MovieServiceImpl implements MovieService{
         movieDto.setTrending(isTrending);
         try {
             movieDto.setImage(file.getBytes());
-            movieDto.setBannerImage(bannerImage.getBytes());
+            if (movieDto.getBannerImage() != null) {
+                movieDto.setBannerImage(bannerImage.getBytes());
+            }
             log.info("Movie Dto is :: {}",movieDto);
             movieRepository.save(movieDto);
             log.info("Movie Saved ..");
@@ -208,6 +210,35 @@ public class MovieServiceImpl implements MovieService{
                 .map(e -> convertAllMovies(e))
                 .collect(Collectors.toList());
         return movieList;
+    }
+
+    @Override
+    public MovieResponse getMovieById(Long id) {
+        log.info("Fetching movie by ID :: {}",id);
+        Movie movie = this.movieRepository.findById(id).orElseThrow(() ->
+                new ClientException("Movie not found with movie ID "+id));
+        return convertAllMovies(movie);
+    }
+
+    @Override
+    public MovieShowResponse getMovieShowById(Long id) {
+        log.info("Fetching movie show details by show id ::{}",id);
+        MovieShow movieShow = this.movieShowRepository.findById(id).orElseThrow(() ->
+            new ClientException("Movie Show not found by show id = "+id)
+        );
+        return convertToMovieShowResponse(movieShow);
+    }
+
+    @Override
+    public SuccessResponse bookSeat(Boolean isBooked,Long seatId) {
+        log.info("Fetching Seat status by seat Id :: {}",seatId);
+        MovieSeat movieSeat = movieSeatRepository.findById(seatId).orElseThrow(() ->
+                new ClientException("Movie Seat not found with Id :: "+seatId));
+        movieSeat.setBooked(isBooked);
+        movieSeatRepository.save(movieSeat);
+        return SuccessResponse.builder()
+                .message("Seat Booked Successfully !!!")
+                .build();
     }
 
 
