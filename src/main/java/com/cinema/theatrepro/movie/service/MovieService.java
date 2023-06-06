@@ -4,6 +4,7 @@ import com.cinema.theatrepro.movie.dto.*;
 import com.cinema.theatrepro.movie.model.MovieSeat;
 import com.cinema.theatrepro.movie.model.MovieShow;
 import com.cinema.theatrepro.shared.enums.Status;
+import com.cinema.theatrepro.shared.generic.GenericResponse;
 import com.cinema.theatrepro.shared.generic.SuccessResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,4 +39,6 @@ public interface MovieService {
     MovieShowResponse getMovieShowById(Long id);
 
     SuccessResponse bookSeat(Boolean isBooked,Long seatId);
+
+    GenericResponse bookMultipleSeats(BookingDto bookingDto);
 }

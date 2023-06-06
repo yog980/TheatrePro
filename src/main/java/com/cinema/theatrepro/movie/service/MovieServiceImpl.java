@@ -1,16 +1,11 @@
 package com.cinema.theatrepro.movie.service;
 
 import com.cinema.theatrepro.movie.dto.*;
-import com.cinema.theatrepro.movie.model.Movie;
-import com.cinema.theatrepro.movie.model.MovieSeat;
-import com.cinema.theatrepro.movie.model.MovieShow;
-import com.cinema.theatrepro.movie.model.Theatre;
-import com.cinema.theatrepro.movie.repo.MovieRepository;
-import com.cinema.theatrepro.movie.repo.MovieSeatRepository;
-import com.cinema.theatrepro.movie.repo.MovieShowRepository;
-import com.cinema.theatrepro.movie.repo.TheatreRepository;
+import com.cinema.theatrepro.movie.model.*;
+import com.cinema.theatrepro.movie.repo.*;
 import com.cinema.theatrepro.shared.enums.Status;
 import com.cinema.theatrepro.shared.exception.ClientException;
+import com.cinema.theatrepro.shared.generic.GenericResponse;
 import com.cinema.theatrepro.shared.generic.SuccessResponse;
 import com.cinema.theatrepro.shared.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +28,16 @@ public class MovieServiceImpl implements MovieService{
     private final TheatreRepository theatreRepository;
     private final MovieShowRepository movieShowRepository;
     private final MovieSeatRepository movieSeatRepository;
+    private final BookingDetailsRepository bookingDetailsRepository;
+    private final BookingDetailSeatsRepository bookingDetailSeatsRepository;
 
-    public MovieServiceImpl(MovieRepository movieRepository, TheatreRepository theatreRepository, MovieShowRepository movieShowRepository, MovieSeatRepository movieSeatRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, TheatreRepository theatreRepository, MovieShowRepository movieShowRepository, MovieSeatRepository movieSeatRepository, BookingDetailsRepository bookingDetailsRepository, BookingDetailSeatsRepository bookingDetailSeatsRepository) {
         this.movieRepository = movieRepository;
         this.theatreRepository = theatreRepository;
         this.movieShowRepository = movieShowRepository;
         this.movieSeatRepository = movieSeatRepository;
+        this.bookingDetailsRepository = bookingDetailsRepository;
+        this.bookingDetailSeatsRepository = bookingDetailSeatsRepository;
     }
 
     @Override
@@ -241,6 +240,44 @@ public class MovieServiceImpl implements MovieService{
                 .build();
     }
 
+    @Override
+    @Transactional
+    public GenericResponse bookMultipleSeats(BookingDto bookingDto) {
+        log.info("Booking Seats with seat IDs :: {}",bookingDto.getSeatIds());
+        List<MovieSeat> movieSeatList = movieSeatRepository.findAllByIdsIn(bookingDto.getSeatIds());
+        if (movieSeatList == null) {
+            return GenericResponse.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .message("No Seats found with provided Seat Ids.")
+                    .build();
+        }
+        MovieShow movieShow = movieShowRepository.findById(bookingDto.getShowId()).orElseThrow(() ->
+                new ClientException("Movie Show not found with show id :: "+bookingDto.getShowId()));
+        movieSeatList.stream().forEach(e -> e.setBooked(Boolean.TRUE));
+        movieSeatRepository.saveAll(movieSeatList);
+        BookingDetails bookingDetails = new BookingDetails();
+        bookingDetails.setBookingDate(new Date());
+        bookingDetails.setStatus(Status.ACTIVE);
+        bookingDetails.setBookingStatus(BookingStatus.REQUESTED);
+        bookingDetails.setUser(null);
+        bookingDetails.setMovieShow(movieShow);
+        bookingDetailsRepository.save(bookingDetails);
+
+        // saving seat details for booking
+        movieSeatList.stream().forEach(e -> {
+            BookingDetailSeats bookingDetailSeats = new BookingDetailSeats();
+            bookingDetailSeats.setBookingDetails(bookingDetails);
+            bookingDetailSeats.setBookingStatus(BookingStatus.REQUESTED);
+            bookingDetailSeats.setStatus(Status.ACTIVE);
+            bookingDetailSeats.setMovieSeat(e);
+            bookingDetailSeatsRepository.save(bookingDetailSeats);
+        });
+
+        return GenericResponse.builder()
+                .code(HttpStatus.OK.value())
+                .message("Seats Booked Successfully !!!")
+                .build();
+    }
 
     private MovieSeatResponse convertToMovieSeatResponse(MovieSeat movieSeat) {
         return MovieSeatResponse.builder()

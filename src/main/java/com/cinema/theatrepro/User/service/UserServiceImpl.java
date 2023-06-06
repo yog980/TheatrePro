@@ -4,13 +4,14 @@ import com.cinema.theatrepro.User.model.User;
 import com.cinema.theatrepro.User.model.UserResources;
 import com.cinema.theatrepro.User.model.UsersDto;
 import com.cinema.theatrepro.User.repo.UserRepository;
-import com.cinema.theatrepro.shared.enums.Role;
+import com.cinema.theatrepro.shared.enums.RoleName;
 import com.cinema.theatrepro.shared.enums.Status;
 import com.cinema.theatrepro.shared.generic.SuccessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +38,12 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<User> findUserByUserName(String username) {
+        log.info("Fetching user by username : "+username);
+        return userRepository.findUserByUsername(username);
+    }
+
     private User convertToUser(UsersDto usersDto) {
         User user = new User();
         user.setFullName(usersDto.getFullName());
@@ -44,7 +51,7 @@ public class UserServiceImpl implements UserService{
         user.setUsername(usersDto.getUsername());
         user.setPassword(usersDto.getPassword());
         user.setContact(usersDto.getContact());
-        user.setRole(Role.valueOf(usersDto.getRole()));
+        user.setRoleName(RoleName.valueOf(usersDto.getRole()));
         user.setStatus(Status.ACTIVE);
         return user;
     }
@@ -55,7 +62,7 @@ public class UserServiceImpl implements UserService{
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .contact(user.getContact())
-                .role(String.valueOf(user.getRole()))
+                .role(String.valueOf(user.getRoleName()))
                 .status(Status.ACTIVE)
                 .build();
     }

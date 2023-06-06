@@ -5,6 +5,7 @@ import com.cinema.theatrepro.movie.model.MovieSeat;
 import com.cinema.theatrepro.movie.model.MovieShow;
 import com.cinema.theatrepro.movie.service.MovieService;
 import com.cinema.theatrepro.shared.enums.Status;
+import com.cinema.theatrepro.shared.generic.GenericResponse;
 import com.cinema.theatrepro.shared.generic.SuccessResponse;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
@@ -98,5 +99,10 @@ public class MovieController {
     public SuccessResponse bookMovieSeat(@PathVariable("seatId") Long seatId,
                                          @RequestParam("isBooked") Boolean isBooked) {
         return movieService.bookSeat(isBooked,seatId);
+    }
+
+    @PostMapping("/book-seats-multiple")
+    public GenericResponse bookMultipleSeats(@RequestBody BookingDto bookingDto) {
+        return movieService.bookMultipleSeats(bookingDto);
     }
 }
