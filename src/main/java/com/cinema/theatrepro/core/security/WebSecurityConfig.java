@@ -19,10 +19,10 @@ public class WebSecurityConfig{
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return super.authenticationManagerBean();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
