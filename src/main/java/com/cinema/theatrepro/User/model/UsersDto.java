@@ -1,6 +1,5 @@
 package com.cinema.theatrepro.User.model;
 
-import com.cinema.theatrepro.shared.enums.Role;
 import com.cinema.theatrepro.shared.enums.Status;
 import lombok.Data;
 
