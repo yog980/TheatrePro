@@ -13,6 +13,7 @@ public class MovieShowResponse {
     private String startDate;
     private String startTime;
     private double discountPercentage;
+    private double pricePerTicket;
     private MovieMiniResource movie;
     private TheatreResponse theatre;
     private Status status;

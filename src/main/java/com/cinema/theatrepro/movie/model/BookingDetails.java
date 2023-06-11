@@ -6,10 +6,10 @@ import com.cinema.theatrepro.shared.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,4 +24,7 @@ public class BookingDetails extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "show_id")
     MovieShow movieShow;
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "bookingDetails")
+    Set<BookingDetailSeats> seatDetails = new HashSet<>();
 }

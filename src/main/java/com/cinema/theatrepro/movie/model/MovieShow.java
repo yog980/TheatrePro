@@ -19,6 +19,7 @@ public class MovieShow extends AbstractEntity {
     private ShowShift shift;
     private Date startDate;
     private double discountPercentage;
+    private double pricePerTicket;
 
     @ManyToOne
     @JoinColumn(name = "movie_id")

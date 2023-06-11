@@ -1,6 +1,7 @@
 package com.cinema.theatrepro.movie.service;
 
 import com.cinema.theatrepro.movie.dto.*;
+import com.cinema.theatrepro.movie.model.BookingDetails;
 import com.cinema.theatrepro.movie.model.MovieSeat;
 import com.cinema.theatrepro.movie.model.MovieShow;
 import com.cinema.theatrepro.shared.enums.Status;
@@ -41,4 +42,6 @@ public interface MovieService {
     SuccessResponse bookSeat(Boolean isBooked,Long seatId);
 
     GenericResponse bookMultipleSeats(BookingDto bookingDto);
+
+    List<BookingResource> fetchAllBookingDetails();
 }

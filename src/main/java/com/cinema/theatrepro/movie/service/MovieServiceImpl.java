@@ -279,6 +279,28 @@ public class MovieServiceImpl implements MovieService{
                 .build();
     }
 
+    @Override
+    public List<BookingResource> fetchAllBookingDetails() {
+        log.info("Fetching booking details ...");
+        return this.bookingDetailsRepository.findAll().stream()
+                .map(e -> convertToBookingResources(e)).collect(Collectors.toList());
+    }
+
+    private BookingResource convertToBookingResources(BookingDetails bookingDetails) {
+        log.info("Booking Detials :: {}",bookingDetails.getSeatDetails());
+        return BookingResource.builder()
+                .booingId(bookingDetails.getId())
+                .bookingDate(bookingDetails.getBookingDate())
+                .movieTitle(bookingDetails.getMovieShow().getMovie().getTitle())
+                .theatre(bookingDetails.getMovieShow().getTheatre().getTitle())
+                .bookingStatus(bookingDetails.getBookingStatus())
+                .discountPercentage(bookingDetails.getMovieShow().getDiscountPercentage())
+                .startDate(bookingDetails.getMovieShow().getStartDate())
+                .shift(bookingDetails.getMovieShow().getShift())
+                .seatsBooked(bookingDetails.getSeatDetails().stream().count())
+                .build();
+    }
+
     private MovieSeatResponse convertToMovieSeatResponse(MovieSeat movieSeat) {
         return MovieSeatResponse.builder()
                 .seatId(movieSeat.getId())
@@ -296,6 +318,7 @@ public class MovieServiceImpl implements MovieService{
                 .startTime(DateUtils.extractTime(movieShow.getStartDate()))
                 .startDate(DateUtils.formatReadableDate(movieShow.getStartDate()))
                 .discountPercentage(movieShow.getDiscountPercentage())
+                .pricePerTicket(movieShow.getPricePerTicket())
                 .movie(MovieMiniResource.builder()
                         .movieId(movieShow.getMovie().getId())
                         .movieTitle(movieShow.getMovie().getTitle())

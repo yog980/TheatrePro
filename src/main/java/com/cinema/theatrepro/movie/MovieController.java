@@ -1,6 +1,7 @@
 package com.cinema.theatrepro.movie;
 
 import com.cinema.theatrepro.movie.dto.*;
+import com.cinema.theatrepro.movie.model.BookingDetails;
 import com.cinema.theatrepro.movie.model.MovieSeat;
 import com.cinema.theatrepro.movie.model.MovieShow;
 import com.cinema.theatrepro.movie.service.MovieService;
@@ -104,5 +105,10 @@ public class MovieController {
     @PostMapping("/book-seats-multiple")
     public GenericResponse bookMultipleSeats(@RequestBody BookingDto bookingDto) {
         return movieService.bookMultipleSeats(bookingDto);
+    }
+
+    @GetMapping("/booking-details/all")
+    public List<BookingResource> getAllBookingDetails() {
+        return movieService.fetchAllBookingDetails();
     }
 }

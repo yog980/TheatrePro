@@ -15,7 +15,9 @@ import java.util.Set;
 @Entity
 public class User extends AbstractEntity {
     private String fullName;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String username;
     private String password;
     private String contact;

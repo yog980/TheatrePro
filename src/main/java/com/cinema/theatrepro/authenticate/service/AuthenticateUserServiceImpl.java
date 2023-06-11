@@ -36,8 +36,9 @@ public class AuthenticateUserServiceImpl implements AuthenticateUserService{
 
     @Override
     public JwtResponse AuthenticateUser(JwtRequest jwtRequest) {
-        String username = jwtRequest.getUsername().contains("@")?jwtRequest.getUsername():jwtRequest.getUsername().concat("@nicasiabank.com");
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        log.info(passwordEncoder.encode(jwtRequest.getPassword()));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+        log.info("User Details :: {}",userDetails);
         if(!passwordEncoder.matches(jwtRequest.getPassword(),userDetails.getPassword())) {
             return JwtResponse.builder()
                     .code(HttpStatus.UNAUTHORIZED.value())
