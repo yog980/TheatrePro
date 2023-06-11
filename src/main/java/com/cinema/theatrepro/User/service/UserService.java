@@ -14,4 +14,6 @@ public interface UserService {
     List<UserResources> fetchAllUsers();
 
     Optional<User> findUserByUserName(String username);
+
+    SuccessResponse deleteUser(Long userId);
 }

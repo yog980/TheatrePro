@@ -353,7 +353,7 @@ public class MovieServiceImpl implements MovieService{
                 .id(movie.getId())
                 .title(movie.getTitle())
                 .description(movie.getDescription())
-                .image(Base64.getEncoder().encodeToString(movie.getImage()))
+                .image(movie.getImage() != null?Base64.getEncoder().encodeToString(movie.getImage()):null)
                 .status(movie.getStatus())
                 .releaseDate(movie.getReleaseDate() != null?DateUtils.formatReadableDate(movie.getReleaseDate()):null)
                 .duration(movie.getDuration())

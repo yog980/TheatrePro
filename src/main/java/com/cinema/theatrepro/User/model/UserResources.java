@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserResources {
+    private Long userId;
     private String fullName;
     private String email;
     private String username;

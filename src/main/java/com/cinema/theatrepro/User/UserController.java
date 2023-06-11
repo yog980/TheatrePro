@@ -26,4 +26,9 @@ public class UserController {
     public List<UserResources> fetchAllUsers() {
         return userService.fetchAllUsers();
     }
+
+    @GetMapping("{id}/delete-user")
+    public SuccessResponse deleteUser(@PathVariable("id") Long userId) {
+        return userService.deleteUser(userId);
+    }
 }
