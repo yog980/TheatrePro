@@ -111,4 +111,9 @@ public class MovieController {
     public List<BookingResource> getAllBookingDetails() {
         return movieService.fetchAllBookingDetails();
     }
+
+    @PostMapping("/{id}/delete-booking")
+    public SuccessResponse deleteBookingDetails(@PathVariable("id") Long bookingDetailsId) {
+        return movieService.deleteBookingDetails(bookingDetailsId);
+    }
 }

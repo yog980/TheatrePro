@@ -11,7 +11,7 @@ import java.util.Date;
     @NoArgsConstructor
     @Builder
     public class BookingResource {
-        private Long booingId;
+        private Long bookingId;
         private BookingStatus bookingStatus;
         private Date bookingDate;
         private double discountPercentage;

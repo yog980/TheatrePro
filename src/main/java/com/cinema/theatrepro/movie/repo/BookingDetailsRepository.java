@@ -2,6 +2,7 @@ package com.cinema.theatrepro.movie.repo;
 
 import com.cinema.theatrepro.movie.dto.BookingResource;
 import com.cinema.theatrepro.movie.model.BookingDetails;
+import com.cinema.theatrepro.shared.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,4 +21,7 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails,L
             "FROM `booking_details` bd\n" +
             "         JOIN `movie_show` ms ON (bd.show_id = ms.id)",nativeQuery = true)
     List<BookingResource> fetchAllBookingDetails();
+
+    
+    List<BookingDetails> findAllByStatus(Status status);
 }

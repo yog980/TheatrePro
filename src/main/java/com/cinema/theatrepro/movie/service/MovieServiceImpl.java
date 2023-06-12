@@ -282,14 +282,27 @@ public class MovieServiceImpl implements MovieService{
     @Override
     public List<BookingResource> fetchAllBookingDetails() {
         log.info("Fetching booking details ...");
-        return this.bookingDetailsRepository.findAll().stream()
+        return this.bookingDetailsRepository.findAllByStatus(Status.ACTIVE).stream()
                 .map(e -> convertToBookingResources(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public SuccessResponse deleteBookingDetails(Long bookingDetailId) {
+        log.info("Fetching booking detail by booking detail id :: {}",bookingDetailId);
+        BookingDetails bookingDetails = this.bookingDetailsRepository.findById(bookingDetailId).orElseThrow(() ->
+                new ClientException("Booking detail not found with booking id "+bookingDetailId));
+        bookingDetails.setStatus(Status.DELETED);
+        bookingDetailsRepository.save(bookingDetails);
+        return SuccessResponse.builder()
+                .message("Booking Details Successfully Deleted")
+                .code(HttpStatus.OK.value())
+                .build();
     }
 
     private BookingResource convertToBookingResources(BookingDetails bookingDetails) {
         log.info("Booking Detials :: {}",bookingDetails.getSeatDetails());
         return BookingResource.builder()
-                .booingId(bookingDetails.getId())
+                .bookingId(bookingDetails.getId())
                 .bookingDate(bookingDetails.getBookingDate())
                 .movieTitle(bookingDetails.getMovieShow().getMovie().getTitle())
                 .theatre(bookingDetails.getMovieShow().getTheatre().getTitle())

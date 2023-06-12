@@ -44,4 +44,6 @@ public interface MovieService {
     GenericResponse bookMultipleSeats(BookingDto bookingDto);
 
     List<BookingResource> fetchAllBookingDetails();
+
+    SuccessResponse deleteBookingDetails(Long bookingDetailId);
 }
